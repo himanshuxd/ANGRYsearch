@@ -5,6 +5,8 @@ ANGRYsearch - file search, instant results as you typeself.
 
 Attempt of making multiplatform version of Everything Search Engine
 https://www.voidtools.com/
+
+newer scandir on 2020.01.15 by @himanshuxd using stl os.scandir() of Python 3.5
 """
 
 # Hide docstring warnings
@@ -24,6 +26,11 @@ import sqlite3
 import subprocess
 import sys
 import time
+
+try:
+    from os import scandir, walk
+except ImportError:
+    from scandir import scandir, walk
 
 from datetime import datetime
 from itertools import permutations
@@ -264,6 +271,7 @@ class ThreadDBUpdate(Qc.QThread):
         dir_list = []
         file_list = []
 
+        '''
         try:
             # SCANDIR ALLOWS MUCH FASTER INDEXING OF THE FILE SYSTEM, OBVIOUS
             # IN LITE MODE IS NOW PART OF PYTHON 3.5, FUNCTIONALLY
@@ -271,7 +279,7 @@ class ThreadDBUpdate(Qc.QThread):
             import scandir
         except ImportError:
             scandir = os
-
+        '''
         for root, dirs, files in scandir.walk(root_dir, onerror=error):
             dirs.sort()
             files.sort()
