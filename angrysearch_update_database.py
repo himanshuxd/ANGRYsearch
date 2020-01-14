@@ -9,6 +9,8 @@ Use crontab to run this update periodically, 2 times a day sounds about right
 crontab example that executes at noon and at midnight
 
 00 00,12 * * * /usr/share/angrysearch/angrysearch_update_database.py
+
+edit by @himanshuxd on 2020.01.15 > using os.scandir instead of the one here since Python 3.5 stl includes it.
 """
 
 # pylama:ignore=D103  ## Hide docstring warnings
@@ -19,18 +21,27 @@ import subprocess
 import sys
 from datetime import datetime
 
+try:
+    from os import scandir, walk
+    SCANDIR_AVAILABLE = True
+except ImportError:
+    from scandir import scandir, walk
+    SCANDIR_AVAILABLE = False
+
 from PyQt5.QtCore import QSettings, QStandardPaths
 
 TEMP_PATH = QStandardPaths.standardLocations(QStandardPaths.TempLocation)[0]
 CACHE_PATH = QStandardPaths.standardLocations(QStandardPaths.CacheLocation)[0]
 DATABASE_PATH = CACHE_PATH + '/angrysearch/angry_database.db'
 
+'''
 # CHECK SCANDIR AVAILABILITY
 try:
     import scandir
     SCANDIR_AVAILABLE = True
 except ImportError:
     SCANDIR_AVAILABLE = False
+'''
 
 # CHECK IF NOTIFICATIONS CAN BE MADE
 try:
